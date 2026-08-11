@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Da Tommy — Pizzeria dal 1978</title>
+<meta name="description" content="Da Tommy, pizzeria a conduzione familiare dal 1978. Forno a legna, prenotazioni, menu, orari e indicazioni stradali.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forno: #201811;
+    --forno-2: #2b2019;
+    --pomodoro: #c5361c;
+    --pomodoro-dark: #9c2913;
+    --grano: #e8a33d;
+    --grano-soft: #f0c274;
+    --basilico: #4c5b3d;
+    --farina: #f5ede0;
+    --farina-dim: #e8dcc4;
+    --ink: #1a1410;
+    --line: rgba(245,237,224,0.16);
+    --shadow: 0 20px 50px rgba(0,0,0,0.35);
+    --radius: 4px;
+    --ff-display: 'Fraunces', serif;
+    --ff-body: 'Inter', sans-serif;
+    --ff-mono: 'Space Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--forno);
+    color: var(--farina);
+    font-family: var(--ff-body);
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  ul{list-style:none;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  section{position:relative;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  h1,h2,h3,h4{font-family:var(--ff-display);font-weight:700;letter-spacing:-0.01em;}
+  .eyebrow{
+    font-family:var(--ff-mono);
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:0.18em;
+    color:var(--grano);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--grano);display:inline-block;}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 26px;
+    border-radius:2px;
+    font-family:var(--ff-mono);
+    font-size:14px;
+    letter-spacing:0.03em;
+    font-weight:700;
+    text-transform:uppercase;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--pomodoro);color:var(--farina);box-shadow:0 8px 20px rgba(197,54,28,0.35);}
+  .btn-primary:hover{background:var(--pomodoro-dark);}
+  .btn-outline{background:transparent;color:var(--farina);border:1.5px solid var(--line);}
+  .btn-outline:hover{border-color:var(--grano);color:var(--grano);}
+  .btn-ghost{background:var(--grano);color:var(--forno);}
+  .btn-ghost:hover{background:var(--grano-soft);}
+  :focus-visible{outline:2px solid var(--grano);outline-offset:3px;}
+
+  /* ---- perforated ticket divider ---- */
+  .tear{
+    height:26px;
+    width:100%;
+    background:
+      radial-gradient(circle 7px at 20px 0, transparent 7px, var(--forno) 7.5px) top/40px 26px repeat-x;
+    position:relative;
+    z-index:2;
+  }
+  .tear.up{transform:scaleY(-1);}
+
+  /* ---- topbar ---- */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;
+    z-index:100;
+    background:rgba(32,24,17,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 24px;max-width:1180px;margin:0 auto;
+  }
+  .logo{
+    font-family:var(--ff-display);font-size:22px;font-weight:900;
+    display:flex;align-items:baseline;gap:8px;
+  }
+  .logo span{color:var(--pomodoro);}
+  .nav-links{display:flex;gap:28px;font-size:14px;font-weight:500;}
+  .nav-links a{opacity:.85;transition:opacity .15s, color .15s;position:relative;}
+  .nav-links a:hover{opacity:1;color:var(--grano);}
+  .topbar-actions{display:flex;align-items:center;gap:12px;}
+  .nav-toggle{display:none;background:none;color:var(--farina);font-size:24px;}
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .topbar-actions .btn-outline{display:none;}
+    .nav-toggle{display:block;}
+  }
+
+  /* ---- sticky call bar (mobile) ---- */
+  .call-fab{
+    position:fixed;right:18px;bottom:18px;z-index:99;
+    width:60px;height:60px;border-radius:50%;
+    background:var(--pomodoro);color:var(--farina);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 26px rgba(0,0,0,0.45);
+    font-size:24px;
+    animation:pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{box-shadow:0 10px 26px rgba(0,0,0,0.45), 0 0 0 0 rgba(197,54,28,0.5);}
+    50%{box-shadow:0 10px 26px rgba(0,0,0,0.45), 0 0 0 10px rgba(197,54,28,0);}
+  }
+
+  /* ---- HERO ---- */
+  .hero{
+    min-height:100vh;
+    display:flex;align-items:center;
+    padding:120px 0 80px;
+    background:
+      radial-gradient(ellipse 700px 420px at 82% 18%, rgba(197,54,28,0.35), transparent 60%),
+      radial-gradient(ellipse 500px 380px at 10% 90%, rgba(232,163,61,0.14), transparent 60%),
+      var(--forno);
+    position:relative;
+    overflow:hidden;
+  }
+  .ember{
+    position:absolute;bottom:-20px;
+    width:5px;height:5px;border-radius:50%;
+    background:var(--grano);
+    opacity:0;
+    filter:blur(0.3px);
+    animation:rise 6s ease-in infinite;
+  }
+  @keyframes rise{
+    0%{opacity:0;transform:translateY(0) translateX(0);}
+    10%{opacity:.9;}
+    80%{opacity:.5;}
+    100%{opacity:0;transform:translateY(-620px) translateX(var(--drift,30px));}
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.15fr 0.85fr;gap:50px;align-items:center;
+  }
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+  .stamp{
+    width:104px;height:104px;border-radius:50%;
+    border:1.5px dashed var(--grano);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    font-family:var(--ff-mono);color:var(--grano);text-align:center;
+    transform:rotate(-9deg);
+    font-size:11px;line-height:1.3;letter-spacing:.05em;
+    margin-bottom:26px;
+  }
+  .stamp b{font-size:20px;font-family:var(--ff-display);color:var(--farina);display:block;}
+  .hero h1{
+    font-size:clamp(48px,7vw,92px);
+    line-height:0.95;
+    color:var(--farina);
+    text-transform:uppercase;
+  }
+  .hero h1 em{
+    font-style:italic;color:var(--pomodoro);
+    -webkit-text-stroke:0;
+  }
+  .hero p.lede{
+    font-size:19px;max-width:480px;margin-top:22px;color:var(--farina-dim);
+  }
+  .hero-actions{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;}
+  .hero-meta{
+    display:flex;gap:26px;margin-top:44px;flex-wrap:wrap;
+    font-family:var(--ff-mono);font-size:12px;color:var(--farina-dim);
+  }
+  .hero-meta strong{display:block;color:var(--grano);font-size:20px;font-family:var(--ff-display);font-style:italic;}
+
+  .oven{
+    position:relative;
+    aspect-ratio:1/1;
+    max-width:300px;
+    margin:0 auto;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .oven::before{
+    content:"";position:absolute;inset:6%;border-radius:50%;
+    background:radial-gradient(circle, rgba(197,54,28,0.42), transparent 70%);
+    filter:blur(14px);
+    animation:glow 4s ease-in-out infinite;
+  }
+  @keyframes glow{0%,100%{opacity:.55;}50%{opacity:.9;}}
+  .pizza-plate{
+    position:relative;width:64%;aspect-ratio:1/1;
+    animation:spin 22s linear infinite;
+    filter:drop-shadow(0 14px 20px rgba(0,0,0,0.5));
+    border-radius:50%;overflow:hidden;
+  }
+  .pizza-plate img{
+    width:100%;height:100%;object-fit:cover;border-radius:50%;
+    display:block;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .steam{
+    position:absolute;bottom:8%;width:4px;height:20px;border-radius:99px;
+    background:rgba(245,237,224,0.5);filter:blur(2px);
+    animation:steam-rise 4.5s ease-in infinite;
+    opacity:0;
+  }
+  @keyframes steam-rise{
+    0%{opacity:0;transform:translateY(0) scaleY(0.6);}
+    18%{opacity:.5;}
+    100%{opacity:0;transform:translateY(-100px) scaleY(1.3) translateX(12px);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---- section shared ---- */
+  .section{padding:96px 0;}
+  .section-head{
+    display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+    margin-bottom:52px;flex-wrap:wrap;
+  }
+  .section-head h2{font-size:clamp(32px,4.2vw,52px);text-transform:uppercase;}
+  .section-head p{max-width:420px;color:var(--farina-dim);}
+  .on-farina{background:var(--farina);color:var(--ink);}
+  .on-farina .eyebrow{color:var(--pomodoro-dark);}
+  .on-farina .eyebrow::before{background:var(--pomodoro-dark);}
+  .on-farina .section-head p{color:#5a5044;}
+
+  /* ---- STORIA / timeline ---- */
+  .timeline{position:relative;padding-left:26px;border-left:2px dashed rgba(26,20,16,0.25);}
+  .tl-item{position:relative;padding-bottom:44px;opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .tl-item.in{opacity:1;transform:translateY(0);}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:"";position:absolute;left:-32px;top:4px;width:12px;height:12px;border-radius:50%;
+    background:var(--pomodoro);border:3px solid var(--farina);
+  }
+  .tl-year{font-family:var(--ff-mono);font-weight:700;color:var(--pomodoro-dark);font-size:14px;letter-spacing:.05em;}
+  .tl-item h3{font-size:24px;margin:6px 0 8px;}
+  .tl-item p{color:#5a5044;max-width:560px;}
+
+  /* ---- MENU ---- */
+  .menu-tabs{display:flex;gap:10px;margin-bottom:30px;}
+  .tab-btn{
+    padding:12px 24px;border-radius:999px;border:1.5px solid var(--line);
+    font-family:var(--ff-mono);font-size:13px;color:var(--farina-dim);
+    text-transform:uppercase;letter-spacing:.04em;transition:.15s;font-weight:700;
+    background:transparent;
+  }
+  .tab-btn:hover{border-color:var(--pomodoro);color:var(--pomodoro-dark);}
+  .tab-btn.active{background:var(--pomodoro);border-color:var(--pomodoro);color:var(--farina);}
+  .ristorante-category{margin-bottom:38px;}
+  .ristorante-category:last-child{margin-bottom:0;}
+  .ristorante-category h3{
+    font-family:var(--ff-mono);text-transform:uppercase;font-size:13px;letter-spacing:.12em;
+    color:var(--grano);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line);
+  }
+  .dish-row{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px dashed var(--line);}
+  .dish-row:last-child{border-bottom:none;}
+  .dish-name{font-size:16px;font-weight:600;}
+  .dish-ing{font-size:13.5px;color:var(--farina-dim);margin-top:3px;}
+  .dish-price{font-family:var(--ff-mono);color:var(--grano);font-weight:700;white-space:nowrap;padding-top:2px;}
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px;}
+  .chip{
+    padding:10px 18px;border-radius:999px;border:1.5px solid var(--line);
+    font-family:var(--ff-mono);font-size:13px;color:var(--farina-dim);
+    display:flex;align-items:center;gap:8px;transition:.15s;
+    background:transparent;
+  }
+  .chip:hover{border-color:var(--grano);color:var(--grano);}
+  .chip.active{background:var(--grano);border-color:var(--grano);color:var(--forno);font-weight:700;}
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;background:var(--line);border:1px solid var(--line);}
+  .menu-card{
+    background:var(--forno);cursor:pointer;transition:background .15s;
+    display:flex;flex-direction:column;
+  }
+  .menu-card:hover{background:var(--forno-2);}
+  .menu-card-photo{
+    aspect-ratio:4/3;overflow:hidden;background:var(--forno-2);
+  }
+  .menu-card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease;}
+  .menu-card:hover .menu-card-photo img{transform:scale(1.05);}
+  .menu-card-photo.placeholder{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    color:var(--farina-dim);opacity:.6;font-family:var(--ff-mono);font-size:11px;
+  }
+  .menu-card-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .menu-card-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+  .menu-card h4{font-size:19px;}
+  .menu-price{font-family:var(--ff-mono);color:var(--grano);font-weight:700;font-size:16px;white-space:nowrap;}
+  .menu-card .ingredients{font-size:13.5px;color:var(--farina-dim);}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+  .tag{font-family:var(--ff-mono);font-size:10.5px;padding:4px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;}
+  .tag.veg{background:#7c9a63;color:#12200a;}
+  .tag.gf{background:var(--grano);color:#2b1a05;}
+  .tag.hot{background:#e2603f;color:#2b0a02;}
+  .menu-hint{margin-top:auto;font-family:var(--ff-mono);font-size:11px;color:var(--farina-dim);opacity:.6;padding-top:6px;}
+
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(10,7,4,0.72);z-index:200;
+    display:flex;align-items:center;justify-content:center;padding:20px;
+    opacity:0;pointer-events:none;transition:opacity .2s ease;
+  }
+  .modal-backdrop.open{opacity:1;pointer-events:auto;}
+  .modal{
+    background:var(--farina);color:var(--ink);max-width:520px;width:100%;
+    border-radius:6px;overflow:hidden;transform:translateY(16px);transition:transform .2s ease;
+    box-shadow:var(--shadow);
+  }
+  .modal-backdrop.open .modal{transform:translateY(0);}
+  .modal-photo{
+    aspect-ratio:16/9;
+    background:var(--farina-dim);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    color:#8a7d64;border-bottom:2px dashed rgba(26,20,16,0.2);
+    overflow:hidden;
+  }
+  .modal-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .modal-body{padding:26px 28px 30px;}
+  .modal-body h3{font-size:26px;margin-bottom:6px;}
+  .modal-price{font-family:var(--ff-mono);color:var(--pomodoro-dark);font-weight:700;font-size:18px;margin-bottom:14px;}
+  .modal-body p{color:#5a5044;margin-bottom:14px;}
+  .modal-close{position:absolute;top:14px;right:14px;background:rgba(26,20,16,0.5);color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;}
+
+  /* ---- GALLERIA ---- */
+  .gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+  .photo-slot{
+    aspect-ratio:4/3;border:1.5px dashed var(--line);border-radius:6px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    color:var(--farina-dim);font-family:var(--ff-mono);font-size:12px;text-align:center;padding:16px;
+    transition:border-color .2s, color .2s;
+    position:relative;overflow:hidden;
+  }
+  .photo-slot:hover{border-color:var(--grano);color:var(--grano);}
+  .photo-slot svg{opacity:.7;width:34px;height:34px;}
+  .photo-slot.tall{grid-row:span 2;aspect-ratio:auto;}
+  .photo-slot.filled{border-style:solid;border-color:var(--line);padding:0;}
+  .photo-slot.filled img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .4s ease;
+  }
+  .photo-slot.filled:hover img{transform:scale(1.06);}
+  .photo-slot.filled:hover{border-color:var(--grano);}
+  .photo-caption{
+    position:absolute;left:0;right:0;bottom:0;padding:10px 14px;
+    background:linear-gradient(to top, rgba(15,10,6,0.85), transparent);
+    color:var(--farina);font-family:var(--ff-mono);font-size:11.5px;text-align:left;
+  }
+
+  /* ---- ORARI + widgets ---- */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);border:1px solid var(--line);}
+  @media (max-width:800px){.split{grid-template-columns:1fr;}}
+  .split-3{grid-template-columns:0.9fr 1fr 1fr;}
+  @media (max-width:980px){.split-3{grid-template-columns:1fr 1fr;}}
+  @media (max-width:640px){.split-3{grid-template-columns:1fr;}}
+  .panel{background:var(--forno);padding:38px;}
+  .status-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--ff-mono);font-size:13px;padding:8px 14px;border-radius:99px;
+    margin-bottom:22px;background:rgba(76,91,61,0.25);color:#9db387;
+  }
+  .status-badge.closed{background:rgba(197,54,28,0.2);color:#ff9878;}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+  .hours-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;}
+  .hours-row:last-child{border-bottom:none;}
+  .hours-row.today{color:var(--grano);font-weight:700;}
+  .hours-row span:last-child{font-family:var(--ff-mono);color:var(--farina-dim);}
+  .hours-row.today span:last-child{color:var(--grano);}
+
+  .weather-widget{display:flex;align-items:center;gap:20px;}
+  .weather-icon{font-size:44px;}
+  .weather-suggest{font-family:var(--ff-display);font-style:italic;font-size:19px;color:var(--grano-soft);margin-top:10px;}
+  .weather-temp{font-family:var(--ff-mono);font-size:34px;font-weight:700;}
+
+  /* ---- RECENSIONI ---- */
+  .reviews-track{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;background:var(--line);border:1px solid var(--line);}
+  .review-card{background:var(--forno);padding:26px;}
+  .stars{color:var(--grano);letter-spacing:2px;margin-bottom:12px;font-size:15px;}
+  .review-card p{color:var(--farina-dim);font-size:14.5px;margin-bottom:14px;}
+  .review-who{font-family:var(--ff-mono);font-size:12px;color:var(--farina-dim);opacity:.7;}
+
+  /* ---- PRENOTA ---- */
+  .book-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start;}
+  @media (max-width:860px){.book-grid{grid-template-columns:1fr;}}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-family:var(--ff-mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#8a7d64;margin-bottom:7px;}
+  .field input,.field select,.field textarea{
+    width:100%;padding:13px 14px;border:1.5px solid rgba(26,20,16,0.2);border-radius:3px;
+    background:#fff;font-family:var(--ff-body);font-size:15px;color:var(--ink);
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pomodoro-dark);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .ticket-card{
+    background:var(--forno);border:1.5px dashed var(--grano);border-radius:6px;padding:30px;
+    font-family:var(--ff-mono);color:var(--farina);
+  }
+  .ticket-card h4{font-family:var(--ff-display);font-style:italic;color:var(--grano);font-size:22px;margin-bottom:14px;}
+  .confirm-box{display:none;margin-top:20px;padding:18px;border:1.5px dashed var(--basilico);border-radius:4px;background:rgba(76,91,61,0.15);}
+  .confirm-box.show{display:block;}
+  .confirm-box p{font-family:var(--ff-mono);font-size:13px;color:#c8d6bd;}
+
+  /* ---- MAPPA ---- */
+  .map-wrap{border:1px solid var(--line);border-radius:8px;overflow:hidden;height:380px;}
+  .map-wrap iframe{width:100%;height:100%;border:0;filter:grayscale(0.35) invert(0.92) contrast(0.9);}
+  .map-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;}
+
+  /* ---- FOOTER ---- */
+  footer{background:var(--forno-2);padding:60px 0 26px;border-top:1px solid var(--line);}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px;margin-bottom:44px;}
+  @media (max-width:800px){.foot-grid{grid-template-columns:1fr 1fr;}}
+  .foot-grid h5{font-family:var(--ff-mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--grano);margin-bottom:16px;}
+  .foot-grid li{margin-bottom:9px;font-size:14px;color:var(--farina-dim);}
+  .foot-grid a:hover{color:var(--grano);}
+  .foot-bottom{display:flex;justify-content:space-between;padding-top:26px;border-top:1px solid var(--line);font-family:var(--ff-mono);font-size:12px;color:var(--farina-dim);opacity:.65;flex-wrap:wrap;gap:10px;}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- ================= TOPBAR ================= -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="#" class="logo">Da <span>Tommy</span></a>
+    <nav class="nav-links">
+      <a href="#orari">Orari &amp; recapiti</a>
+      <a href="#menu">Menu</a>
+      <a href="#galleria">Locale</a>
+      <a href="#recensioni">Recensioni</a>
+      <a href="#prenota">Prenota</a>
+      <a href="#mappa">Dove siamo</a>
+      <a href="#storia">Chi siamo</a>
+    </nav>
+    <div class="topbar-actions">
+      <a href="tel:+393665488260" class="btn btn-outline">☏ 366 548 8260</a>
+      <a href="#prenota" class="btn btn-primary">Prenota</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Apri menu">☰</button>
+  </div>
+</div>
+
+<a href="tel:+393665488260" class="call-fab" aria-label="Chiama Da Tommy">☏</a>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div id="embers"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="stamp">DAL<b>1978</b>FORNO A LEGNA</div>
+      <h1>Pizza<br>come una<br><em>volta.</em></h1>
+      <p class="lede">Tre generazioni della famiglia Tommy, un forno a legna che non si è mai spento e un impasto che riposa 48 ore. Vieni a trovarci, oppure chiama: ti teniamo il tavolo.</p>
+      <div class="hero-actions">
+        <a href="tel:+393665488260" class="btn btn-primary">☏ Chiama e prenota</a>
+        <a href="#menu" class="btn btn-outline">Guarda il menu</a>
+      </div>
+      <div class="hero-meta">
+        <div><strong>48h</strong>lievitazione impasto</div>
+        <div><strong>N.36</strong>pizze in carta</div>
+        <div><strong>1978</strong>apertura del forno</div>
+      </div>
+    </div>
+    <div class="oven">
+      <div class="steam" style="left:44%;animation-delay:0s;"></div>
+      <div class="steam" style="left:52%;animation-delay:1.4s;"></div>
+      <div class="steam" style="left:60%;animation-delay:2.6s;"></div>
+      <div class="pizza-plate">
+        <img src="images/pizza_dall_alto.jpeg" alt="Pizza Margherita di Da Tommy vista dall'alto">
+      </div>
+    </div>
+  </div>
+</section>
+<div class="tear"></div>
+
+<!-- ================= RECAPITI + ORARI + METEO ================= -->
+<section class="section" id="orari" style="padding-top:150px;">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Recapiti &amp; orari</div>
+        <h2>Tutto il necessario</h2>
+      </div>
+      <p>L'orario qui sotto si aggiorna da solo: sai sempre se siamo aperti prima ancora di chiamare.</p>
+    </div>
+    <div class="split split-3">
+      <div class="panel">
+        <div class="eyebrow" style="margin-bottom:18px;">Contatti</div>
+        <ul style="font-family:var(--ff-mono);font-size:14px;line-height:2.4;">
+          <li><a href="tel:+393665488260">☏ 366 548 8260</a></li>
+          <li><a href="mailto:tommymene04@gmail.com">✉ tommymene04@gmail.com</a></li>
+          <li>📍 Via P. Sterzi 41<br>Nogara (VR)</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="status-badge" id="statusBadge"><span class="status-dot"></span><span id="statusText">Verifica in corso…</span></div>
+        <div id="hoursList"></div>
+      </div>
+      <div class="panel">
+        <div class="eyebrow" style="margin-bottom:18px;">Oggi da Tommy</div>
+        <div class="weather-widget">
+          <div class="weather-icon" id="weatherIcon">🍕</div>
+          <div>
+            <div class="weather-temp" id="weatherTemp">--°</div>
+            <div style="font-family:var(--ff-mono);font-size:12px;color:var(--farina-dim);" id="weatherPlace">Zona pizzeria</div>
+          </div>
+        </div>
+        <div class="weather-suggest" id="weatherSuggest">Sto controllando il tempo…</div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="tear up"></div>
+
+<!-- ================= MENU ================= -->
+<section class="section" id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">La carta</div>
+        <h2>Il menu</h2>
+      </div>
+      <p>Pizzeria e ristorante sotto lo stesso tetto: scegli la carta che ti interessa.</p>
+    </div>
+
+    <div class="menu-tabs" id="menuTabs">
+      <button class="tab-btn active" data-tab="pizze">🍕 Pizze</button>
+      <button class="tab-btn" data-tab="ristorante">🍽️ Ristorante</button>
+    </div>
+
+    <div id="pizzeWrap">
+      <div class="filters" id="filters">
+        <button class="chip active" data-filter="tutte">Tutte</button>
+        <button class="chip" data-filter="veg">🌿 Vegetariane</button>
+        <button class="chip" data-filter="gf">🌾 Senza glutine</button>
+        <button class="chip" data-filter="hot">🌶️ Piccanti</button>
+      </div>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <div id="ristoranteWrap" style="display:none;">
+      <div id="ristoranteGrid"></div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-photo" id="modalPhoto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="34" height="34"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 15l-5-4-4 4-3-2-6 5"/></svg>
+      <span>Foto in arrivo</span>
+    </div>
+    <div class="modal-body">
+      <h3 id="modalName"></h3>
+      <div class="modal-price" id="modalPrice"></div>
+      <p id="modalDesc"></p>
+      <div class="tags" id="modalTags"></div>
+    </div>
+  </div>
+</div>
+
+<div class="tear"></div>
+
+<!-- ================= GALLERIA ================= -->
+<section class="section" id="galleria">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Galleria</div>
+        <h2>Il locale</h2>
+      </div>
+      <p>Uno sguardo al locale, prima di venire a trovarci.</p>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</section>
+<div class="tear up"></div>
+
+<!-- ================= RECENSIONI ================= -->
+<section class="section" id="recensioni">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Cosa dicono di noi</div>
+        <h2>Recensioni</h2>
+      </div>
+      <p>Una selezione di commenti lasciati dai clienti.</p>
+    </div>
+    <div class="reviews-track">
+      <div class="review-card"><div class="stars">★★★★★</div><p>"L'impasto è leggerissimo, e si sente che il forno a legna fa la differenza. La marinara è la migliore che abbia mai mangiato."</p><div class="review-who">— Elena F.</div></div>
+      <div class="review-card"><div class="stars">★★★★★</div><p>"Locale a conduzione familiare, si vede subito. Personale gentilissimo e tempi di attesa onesti anche il sabato sera."</p><div class="review-who">— Davide R.</div></div>
+      <div class="review-card"><div class="stars">★★★★☆</div><p>"Ottima anche l'opzione senza glutine, finalmente una pizzeria dove non mi sento un cliente di serie B."</p><div class="review-who">— Chiara M.</div></div>
+      <div class="review-card"><div class="stars">★★★★★</div><p>"Prenotato per telefono in un minuto, tavolo pronto all'orario esatto. Piccola cosa ma fa la differenza."</p><div class="review-who">— Andrea S.</div></div>
+    </div>
+  </div>
+</section>
+<div class="tear up"></div>
+
+<!-- ================= PRENOTA ================= -->
+<section class="section on-farina" id="prenota">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Prenotazione</div>
+        <h2>Prenota un tavolo</h2>
+      </div>
+      <p>Preferisci la voce? Chiamaci al <strong>366 548 8260</strong>. Se no, compila qui: si apre WhatsApp con il messaggio già pronto da inviarci — ti confermiamo noi la prenotazione!</p>
+    </div>
+
+    <div class="split" style="margin-bottom:56px;">
+      <div class="panel" style="background:var(--farina);color:var(--ink);">
+        <div class="eyebrow" style="margin-bottom:12px;">🥡 Asporto</div>
+        <h3 style="font-size:20px;margin-bottom:8px;">Pronta quando arrivi</h3>
+        <p style="color:#5a5044;font-size:14.5px;">Chiama, ordina e passa a ritirare: nessun costo aggiuntivo. Ti diamo un orario indicativo al telefono in base al carico del forno.</p>
+      </div>
+      <div class="panel" style="background:var(--farina);color:var(--ink);">
+        <div class="eyebrow" style="margin-bottom:12px;">🛵 Domicilio — 3,00 €</div>
+        <h3 style="font-size:20px;margin-bottom:8px;">Consegna a casa</h3>
+        <p style="color:#5a5044;font-size:14.5px;">Consegniamo nella zona di Nogara e paesi limitrofi. Costo di consegna 3,00 € a ordine, indipendentemente dall'importo.</p>
+      </div>
+    </div>
+
+    <div class="book-grid">
+      <form id="bookForm">
+        <div class="field-row">
+          <div class="field"><label for="fName">Nome e cognome</label><input id="fName" type="text" required placeholder="Mario Bianchi"></div>
+          <div class="field"><label for="fPhone">Telefono</label><input id="fPhone" type="tel" required placeholder="333 1234567"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="fDate">Data</label><input id="fDate" type="date" required></div>
+          <div class="field"><label for="fTime">Ora</label><input id="fTime" type="time" required></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="fPeople">Persone</label>
+            <select id="fPeople">
+              <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7+</option>
+            </select>
+          </div>
+          <div class="field"><label for="fNote">Note (allergie, seggiolone…)</label><input id="fNote" type="text" placeholder="Facoltativo"></div>
+        </div>
+        <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center;margin-top:6px;">📲 Invia richiesta su WhatsApp</button>
+      </form>
+      <div class="ticket-card">
+        <h4>Comanda #<span id="ticketNum">104</span></h4>
+        <div id="ticketPreview">
+          <div style="opacity:.55;">In attesa dei tuoi dati…</div>
+        </div>
+        <div class="confirm-box" id="confirmBox">
+          <p>✓ RICHIESTA PRONTA<br>Si è aperto WhatsApp con il messaggio compilato: inviacelo e ti confermiamo il tavolo appena possibile. Per urgenze, chiama direttamente lo 366 548 8260.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="tear"></div>
+
+<!-- ================= MAPPA ================= -->
+<section class="section" id="mappa">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Dove siamo</div>
+        <h2>Vieni a trovarci</h2>
+      </div>
+      <p>Via P. Sterzi 41, Nogara (VR) — parcheggio disponibile nelle vicinanze.</p>
+    </div>
+    <div class="map-wrap">
+      <iframe src="https://maps.google.com/maps?q=Via%20P.%20Sterzi%2041%2C%20Nogara%20VR&t=&z=16&ie=UTF8&iwloc=&output=embed" loading="lazy" title="Mappa Da Tommy"></iframe>
+    </div>
+    <div class="map-actions">
+      <a class="btn btn-primary" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=Via+P.+Sterzi+41,+Nogara+VR">📍 Indicazioni stradali</a>
+      <a class="btn btn-outline" href="tel:+393665488260">☏ Chiama per info</a>
+    </div>
+  </div>
+</section>
+<div class="tear"></div>
+
+<!-- ================= STORIA ================= -->
+<section class="section on-farina" id="storia">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">La nostra storia</div>
+        <h2>Tre generazioni,<br>un solo forno.</h2>
+      </div>
+      <p>Da un piccolo locale di paese a un punto di riferimento per chi cerca la pizza fatta come si faceva una volta.</p>
+    </div>
+    <div class="timeline" id="timeline">
+      <div class="tl-item reveal"><div class="tl-year">1978</div><h3>Tommaso apre il forno</h3><p>Tommaso "Tommy" apre una piccola pizzeria d'asporto con un forno a legna costruito a mano insieme al padre muratore.</p></div>
+      <div class="tl-item reveal"><div class="tl-year">1995</div><h3>Arriva la sala</h3><p>Il locale si allarga: nasce la sala con i tavoli, e la ricetta dell'impasto a lunga lievitazione diventa quella di sempre.</p></div>
+      <div class="tl-item reveal"><div class="tl-year">2010</div><h3>Il timone passa ai figli</h3><p>I figli di Tommy prendono in mano la cucina e la sala, rinnovando il locale senza toccare la ricetta del padre.</p></div>
+      <div class="tl-item reveal"><div class="tl-year">Oggi</div><h3>La stessa famiglia, lo stesso forno</h3><p>Lo stesso forno del 1978, gli stessi gesti, e una carta che ogni tanto si rinnova con qualche pizza nuova, sempre testata in famiglia prima.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo" style="margin-bottom:14px;">Da <span>Tommy</span></div>
+        <p style="color:var(--farina-dim);font-size:14px;max-width:260px;">Pizzeria a conduzione familiare dal 1978. Forno a legna, impasto a lunga lievitazione, sempre la stessa famiglia.</p>
+      </div>
+      <div>
+        <h5>Contatti</h5>
+        <ul>
+          <li><a href="tel:+393665488260">☏ 366 548 8260</a></li>
+          <li><a href="mailto:tommymene04@gmail.com">tommymene04@gmail.com</a></li>
+          <li>Via P. Sterzi 41, Nogara (VR)</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Link rapidi</h5>
+        <ul>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#prenota">Prenota</a></li>
+          <li><a href="#galleria">Locale</a></li>
+          <li><a href="#mappa">Dove siamo</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Da Tommy — Ristorante fittizio, sito dimostrativo.</span>
+      <span>Fatto con forno a legna e un po' di codice.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- embers ---------- */
+(function(){
+  const holder = document.getElementById('embers');
+  const n = window.innerWidth < 700 ? 10 : 18;
+  for(let i=0;i<n;i++){
+    const e = document.createElement('div');
+    e.className='ember';
+    e.style.left = (60 + Math.random()*35) + '%';
+    e.style.setProperty('--drift', (Math.random()*80-40)+'px');
+    e.style.animationDelay = (Math.random()*6)+'s';
+    e.style.animationDuration = (5+Math.random()*3)+'s';
+    holder.appendChild(e);
+  }
+})();
+
+/* ---------- mobile nav ---------- */
+document.getElementById('navToggle').addEventListener('click', function(){
+  const links = document.querySelector('.nav-links');
+  const isOpen = links.style.display === 'flex';
+  links.style.display = isOpen ? 'none' : 'flex';
+  links.style.cssText += isOpen ? '' : 'flex-direction:column;position:fixed;top:64px;left:0;right:0;background:#201811;padding:20px 24px;border-bottom:1px solid rgba(245,237,224,0.16);gap:16px;';
+});
+
+/* ---------- scroll reveal ---------- */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); } });
+},{threshold:0.2});
+document.querySelectorAll('.reveal, .tl-item').forEach(el=>observer.observe(el));
+
+/* ---------- MENU DATA ---------- */
+const menu = [
+  {n:"Marinara", p:"6,50 €", ing:"Pomodoro San Marzano, aglio, origano, olio EVO", tags:["veg","gf"], desc:"La più antica della carta: solo pomodoro, aglio e origano. Come la faceva Tommy nel '78.", img:"images/marinara.jpeg"},
+  {n:"Margherita", p:"7,50 €", ing:"Pomodoro, fior di latte, basilico fresco", tags:["veg","gf"], desc:"Semplice e perfetta: la prova del cuoco per ogni pizzaiolo.", img:"images/margherita.jpeg"},
+  {n:"Diavola", p:"9,00 €", ing:"Pomodoro, fior di latte, salame piccante calabrese", tags:["hot","gf"], desc:"Per chi ama il piccante vero, non quello finto.", img:"images/diavola.jpeg"},
+  {n:"Capricciosa", p:"10,00 €", ing:"Pomodoro, mozzarella, prosciutto cotto, funghi, carciofi, olive", tags:["gf"], desc:"Un po' di tutto, come piace a chi non vuole scegliere.", img:"images/capriciosa.jpeg"},
+  {n:"Quattro Formaggi", p:"9,50 €", ing:"Fior di latte, gorgonzola, provola, grana, un filo di miele", tags:["veg","gf"], desc:"Cremosa, decisa, con un tocco dolce a bilanciare.", img:"images/4formaggi.jpeg"},
+  {n:"Parmigiana", p:"9,00 €", ing:"Pomodoro, melanzane fritte, fior di latte, grana, basilico", tags:["veg"], desc:"La parmigiana di famiglia, versione pizza.", img:"images/parmigiana.jpeg"},
+  {n:"Bufala e Crudo", p:"12,00 €", ing:"Pomodoro, mozzarella di bufala, prosciutto crudo 18 mesi, rucola", tags:["gf"], desc:"Ingredienti pochi, tutti veri: bufala DOP e crudo stagionato.", img:"images/bufala_e_crudo.jpeg"},
+  {n:"Tommy Special", p:"12,50 €", ing:"Crema di zucca, salsiccia, provola affumicata, rosmarino", tags:[], desc:"La pizza fuori menu diventata fissa dopo mille richieste.", img:"images/special.jpeg"},
+];
+const tagLabel = {veg:'Vegetariana', gf:'Senza glutine', hot:'Piccante'};
+const cameraSvgSmall = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 15l-5-4-4 4-3-2-6 5"/></svg>`;
+const grid = document.getElementById('menuGrid');
+function renderMenu(filter){
+  grid.innerHTML='';
+  menu.filter(m=> filter==='tutte' ? true : m.tags.includes(filter)).forEach(m=>{
+    const card = document.createElement('div');
+    card.className='menu-card';
+    const photoHtml = m.img
+      ? `<div class="menu-card-photo"><img src="${m.img}" alt="${m.n}" loading="lazy"></div>`
+      : `<div class="menu-card-photo placeholder">${cameraSvgSmall}<span>Foto in arrivo</span></div>`;
+    card.innerHTML = `
+      ${photoHtml}
+      <div class="menu-card-body">
+        <div class="menu-card-top"><h4>${m.n}</h4><div class="menu-price">${m.p}</div></div>
+        <div class="ingredients">${m.ing}</div>
+        <div class="tags">${m.tags.map(t=>`<span class="tag ${t}">${tagLabel[t]}</span>`).join('')}</div>
+        <div class="menu-hint">Tocca per i dettagli →</div>
+      </div>`;
+    card.addEventListener('click', ()=> openModal(m));
+    grid.appendChild(card);
+  });
+}
+renderMenu('tutte');
+document.getElementById('filters').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.chip');
+  if(!btn) return;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(btn.dataset.filter);
+});
+
+/* ---------- MENU RISTORANTE ---------- */
+const ristorante = {
+  "Antipasti": [
+    {n:"Tagliere della casa", p:"9,00 €", ing:"Salumi e formaggi del territorio, miele, giardiniera"},
+    {n:"Bruschette miste", p:"6,00 €", ing:"Pomodoro fresco, crema di olive, lardo e rosmarino"},
+  ],
+  "Primi": [
+    {n:"Tagliatelle al ragù", p:"9,50 €", ing:"Pasta fresca fatta in casa, ragù di carne"},
+    {n:"Risotto ai funghi porcini", p:"10,50 €", ing:"Riso Carnaroli, porcini, parmigiano"},
+    {n:"Gnocchi al gorgonzola", p:"9,00 €", ing:"Gnocchi di patate fatti in casa, gorgonzola, noci"},
+  ],
+  "Secondi": [
+    {n:"Tagliata di manzo", p:"14,00 €", ing:"Rucola, scaglie di grana, riduzione di aceto balsamico"},
+    {n:"Grigliata mista", p:"13,50 €", ing:"Salsiccia, pollo, costine, verdure grigliate"},
+    {n:"Cotoletta alla milanese", p:"12,00 €", ing:"Con patate al forno"},
+  ],
+  "Contorni": [
+    {n:"Patate al forno", p:"4,00 €", ing:"Rosmarino e sale grosso"},
+    {n:"Verdure grigliate", p:"4,50 €", ing:"Di stagione"},
+  ],
+  "Dolci": [
+    {n:"Tiramisù della casa", p:"5,00 €", ing:"Ricetta di famiglia"},
+    {n:"Panna cotta", p:"5,00 €", ing:"Con coulis di frutti di bosco"},
+  ],
+};
+function renderRistorante(){
+  const el = document.getElementById('ristoranteGrid');
+  el.innerHTML = Object.entries(ristorante).map(([cat, dishes])=>`
+    <div class="ristorante-category">
+      <h3>${cat}</h3>
+      ${dishes.map(d=>`
+        <div class="dish-row">
+          <div>
+            <div class="dish-name">${d.n}</div>
+            <div class="dish-ing">${d.ing}</div>
+          </div>
+          <div class="dish-price">${d.p}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+renderRistorante();
+
+/* ---------- TAB SWITCH ---------- */
+document.getElementById('menuTabs').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.tab-btn');
+  if(!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const isPizze = btn.dataset.tab === 'pizze';
+  document.getElementById('pizzeWrap').style.display = isPizze ? '' : 'none';
+  document.getElementById('ristoranteWrap').style.display = isPizze ? 'none' : '';
+});
+
+/* ---------- modal ---------- */
+const backdrop = document.getElementById('modalBackdrop');
+function openModal(m){
+  document.getElementById('modalName').textContent = m.n;
+  document.getElementById('modalPrice').textContent = m.p;
+  document.getElementById('modalDesc').textContent = m.desc + " Ingredienti: " + m.ing + ".";
+  document.getElementById('modalTags').innerHTML = m.tags.map(t=>`<span class="tag ${t}">${tagLabel[t]}</span>`).join('') || '';
+  const modalPhoto = document.getElementById('modalPhoto');
+  modalPhoto.innerHTML = m.img
+    ? `<img src="${m.img}" alt="${m.n}">`
+    : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="34" height="34"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 15l-5-4-4 4-3-2-6 5"/></svg><span>Foto in arrivo</span>`;
+  backdrop.classList.add('open');
+}
+document.getElementById('modalClose').addEventListener('click', ()=>backdrop.classList.remove('open'));
+backdrop.addEventListener('click', (e)=>{ if(e.target===backdrop) backdrop.classList.remove('open'); });
+
+/* ---------- gallery placeholders ---------- */
+const galleryItems = [
+  {label:"Sala principale", tall:true, img:"images/sala.jpeg"},
+  {label:"Il forno a legna", img:"images/forno_a_legna.jpeg"},
+  {label:"Margherita appena sfornata", img:"images/margherita_appena_sfornata.jpeg"},
+  {label:"Il bancone", img:"images/bancone_pizzeria.jpeg"},
+  {label:"Dehors estivo", img:"images/dehors_pizzeria.jpeg"},
+  {label:"Impasto in lavorazione", img:"images/impasto.jpeg"},
+];
+document.getElementById('galleryGrid').innerHTML = galleryItems.map(g=>
+  `<div class="photo-slot filled ${g.tall?'tall':''}"><img src="${g.img}" alt="${g.label}" loading="lazy"><span class="photo-caption">${g.label}</span></div>`
+).join('');
+
+/* ---------- orari live ---------- */
+const hours = [
+  {d:"Lunedì", open:false},
+  {d:"Martedì", ranges:[[19,0,23,0]]},
+  {d:"Mercoledì", ranges:[[19,0,23,0]]},
+  {d:"Giovedì", ranges:[[19,0,23,0]]},
+  {d:"Venerdì", ranges:[[12,0,14,30],[19,0,23,30]]},
+  {d:"Sabato", ranges:[[12,0,14,30],[19,0,23,30]]},
+  {d:"Domenica", ranges:[[12,0,14,30],[19,0,22,30]]},
+];
+function fmt(h,m){return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');}
+function renderHours(){
+  const list = document.getElementById('hoursList');
+  const todayIdx = (new Date().getDay()+6)%7; // lun=0
+  list.innerHTML = hours.map((h,i)=>{
+    const label = h.open===false ? "Chiuso" : h.ranges.map(r=>fmt(r[0],r[1])+"–"+fmt(r[2],r[3])).join(' · ');
+    return `<div class="hours-row ${i===todayIdx?'today':''}"><span>${h.d}</span><span>${label}</span></div>`;
+  }).join('');
+
+  const now = new Date();
+  const nowMin = now.getHours()*60+now.getMinutes();
+  const today = hours[todayIdx];
+  let isOpen=false, reopenText='';
+  if(today.open!==false){
+    for(const r of today.ranges){
+      const start=r[0]*60+r[1], end=r[2]*60+r[3];
+      if(nowMin>=start && nowMin<=end){ isOpen=true; break; }
+    }
+    if(!isOpen){
+      const next = today.ranges.find(r=> nowMin < r[0]*60+r[1]);
+      if(next) reopenText = "Apre alle " + fmt(next[0],next[1]);
+    }
+  }
+  const badge = document.getElementById('statusBadge');
+  const text = document.getElementById('statusText');
+  if(isOpen){
+    badge.classList.remove('closed');
+    text.textContent = "Aperto ora — si accettano prenotazioni";
+  } else {
+    badge.classList.add('closed');
+    text.textContent = reopenText ? `Chiuso ora — ${reopenText}` : "Chiuso ora — consulta gli orari sotto";
+  }
+}
+renderHours();
+setInterval(renderHours, 60000);
+
+/* ---------- meteo (Open-Meteo, no key) ---------- */
+(function(){
+  const lat=45.1677, lon=11.0619; // Nogara (VR), indirizzo del locale
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+    .then(r=>r.json())
+    .then(data=>{
+      const w = data.current_weather;
+      if(!w) throw new Error('no data');
+      const t = Math.round(w.temperature);
+      document.getElementById('weatherTemp').textContent = t+'°';
+      document.getElementById('weatherPlace').textContent = 'Zona pizzeria, oggi';
+      const code = w.weathercode;
+      let icon='☀️', msg='Bel tempo: il dehors è perfetto stasera.';
+      if(code===0){icon='☀️'; msg='Cielo sereno: ottima serata per mangiare fuori.';}
+      else if([1,2,3].includes(code)){icon='⛅'; msg='Un po\' di nuvole, ma si sta comunque bene fuori.';}
+      else if([45,48].includes(code)){icon='🌫️'; msg='Foschia in giro: dentro si sta più comodi.';}
+      else if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)){icon='🌧️'; msg='Pioggia in arrivo: meglio un tavolo in sala.';}
+      else if([71,73,75,77,85,86].includes(code)){icon='❄️'; msg='Freddo: perfetto per una pizza bollente e un tavolo al caldo.';}
+      else if([95,96,99].includes(code)){icon='⛈️'; msg='Temporale: vi aspettiamo comodi in sala.';}
+      document.getElementById('weatherIcon').textContent = icon;
+      document.getElementById('weatherSuggest').textContent = msg;
+    })
+    .catch(()=>{
+      document.getElementById('weatherTemp').textContent = '—';
+      document.getElementById('weatherSuggest').textContent = 'Qualunque sia il tempo, da noi si sta sempre bene.';
+      document.getElementById('weatherIcon').textContent = '🍕';
+    });
+})();
+
+/* ---------- prenotazione ---------- */
+const bookForm = document.getElementById('bookForm');
+const ticketPreview = document.getElementById('ticketPreview');
+const ticketNum = document.getElementById('ticketNum');
+ticketNum.textContent = 100 + Math.floor(Math.random()*80);
+
+function updateTicket(){
+  const name = document.getElementById('fName').value || '—';
+  const date = document.getElementById('fDate').value || '—';
+  const time = document.getElementById('fTime').value || '—';
+  const people = document.getElementById('fPeople').value || '—';
+  ticketPreview.innerHTML = `
+    <div style="font-size:13px;line-height:1.9;">
+      NOME ..... ${name}<br>
+      DATA ..... ${date}<br>
+      ORA ...... ${time}<br>
+      COPERTI .. ${people}
+    </div>`;
+}
+['fName','fDate','fTime','fPeople'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', updateTicket);
+  document.getElementById(id).addEventListener('change', updateTicket);
+});
+
+bookForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  updateTicket();
+  const name = document.getElementById('fName').value;
+  const phone = document.getElementById('fPhone').value;
+  const date = document.getElementById('fDate').value;
+  const time = document.getElementById('fTime').value;
+  const people = document.getElementById('fPeople').value;
+  const note = document.getElementById('fNote').value;
+  const msg = `Ciao! Vorrei prenotare un tavolo da Tommy.%0A` +
+    `Nome: ${name}%0ATelefono: ${phone}%0AData: ${date}%0AOra: ${time}%0APersone: ${people}` +
+    (note ? `%0ANote: ${note}` : '');
+  window.open(`https://wa.me/393665488260?text=${msg}`, '_blank');
+  document.getElementById('confirmBox').classList.add('show');
+});
+</script>
+</body>
+</html>
